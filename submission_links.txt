@@ -1,0 +1,18 @@
+Task 1 - Branching and Feature Development
+Author: veerandra7 (veerandra.data@gmail.com)
+
+Repository (public, default branch = main):
+https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development
+
+Branches:
+main              https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development/tree/main
+feature-login     https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development/tree/feature-login
+feature-profile   https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development/tree/feature-profile
+feature-dashboard https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development/tree/feature-dashboard
+
+Key files for the reviewer:
+README.md         full write-up, branch strategy, pasted git log --graph, command walkthrough
+GIT_EVIDENCE.md   raw unedited terminal transcript of the whole session
+
+Note: feature-experimental was created, merged and then deleted on purpose, to
+demonstrate branch deletion, so it is not listed above.
