@@ -15,7 +15,7 @@ def format_row(label, value):
     """Return one aligned 'label : value' row for the dashboard body."""
     if value is None:
         value = "unavailable"
-    return "| {:<28}{:>16} |".format(label, value)
+    return "| {:<28}{:>17} |".format(label, value)
 
 
 def render_dashboard():
