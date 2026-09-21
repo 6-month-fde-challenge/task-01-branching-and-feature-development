@@ -250,6 +250,10 @@ $ git branch -a
   feature-login
   feature-profile
 * main
+  remotes/origin/feature-dashboard
+  remotes/origin/feature-login
+  remotes/origin/feature-profile
+  remotes/origin/main
 ```
 
 ---
@@ -258,21 +262,22 @@ $ git branch -a
 
 ```console
 $ git log --graph --oneline --all --decorate
-*   9e804f3 (HEAD -> main) Merge feature-experimental into main
+* b57b581 (HEAD -> main, origin/main) Add README, git evidence transcript and submission links
+*   9e804f3 Merge feature-experimental into main
 |\  
 | * 42bfa3e Align dashboard value column with the border width
 |/  
 *   be453de Merge feature-dashboard into main
 |\  
-| * 8ee8729 (feature-dashboard) Add render_dashboard with aligned summary rows and signed-in header
+| * 8ee8729 (origin/feature-dashboard, feature-dashboard) Add render_dashboard with aligned summary rows and signed-in header
 |/  
 *   21e1eef Merge feature-profile into main
 |\  
-| * 00d42d4 (feature-profile) Add get_display_name and authentication gate to profile
+| * 00d42d4 (origin/feature-profile, feature-profile) Add get_display_name and authentication gate to profile
 |/  
 *   eb83da5 Merge feature-login into main
 |\  
-| * 1283846 (feature-login) Add credential validation and is_authenticated helper to login
+| * 1283846 (origin/feature-login, feature-login) Add credential validation and is_authenticated helper to login
 |/  
 * 7237e61 Add calculator entry point and dashboard report
 * 76a610f Add arithmetic modules for addition, subtraction, multiplication and division
@@ -300,6 +305,8 @@ eb83da5 Merge feature-login into main
 ```console
 $ git status
 On branch main
+Your branch is up to date with 'origin/main'.
+
 nothing to commit, working tree clean
 ```
 
@@ -326,6 +333,158 @@ API key present and logged in as veerandra
 | Result of multiplication                   50 |
 | Result of division                        2.0 |
 *************************************************
+```
+
+---
+## 7. Remote creation, push and verification
+
+```console
+$ git status --short
+?? GIT_EVIDENCE.md
+?? README.md
+?? submission_links.txt
+
+$ git add README.md GIT_EVIDENCE.md submission_links.txt
+warning: in the working copy of 'GIT_EVIDENCE.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'submission_links.txt', LF will be replaced by CRLF the next time Git touches it
+
+$ git commit -m "Add README, git evidence transcript and submission links"
+[main b57b581] Add README, git evidence transcript and submission links
+ 3 files changed, 884 insertions(+)
+ create mode 100644 GIT_EVIDENCE.md
+ create mode 100644 README.md
+ create mode 100644 submission_links.txt
+
+$ gh repo create 6-month-fde-challenge/task-01-branching-and-feature-development --public -d "Task 1 - Git branching and feature development: main plus feature-login, feature-profile and feature-dashboard, each merged into main with full visible history." --source=. --remote=origin --push
+https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development
+To https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development.git
+ * [new branch]      HEAD -> main
+branch 'main' set up to track 'origin/main'.
+
+$ git push -u origin --all
+To https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development.git
+ * [new branch]      feature-dashboard -> feature-dashboard
+ * [new branch]      feature-login -> feature-login
+ * [new branch]      feature-profile -> feature-profile
+branch 'main' set up to track 'origin/main'.
+branch 'feature-dashboard' set up to track 'origin/feature-dashboard'.
+branch 'feature-login' set up to track 'origin/feature-login'.
+branch 'feature-profile' set up to track 'origin/feature-profile'.
+
+$ git ls-remote --heads origin
+8ee87293250cbc179b9a16d88923482124efbab4	refs/heads/feature-dashboard
+1283846bf60fa95e67d1848c29ca4bb02b317101	refs/heads/feature-login
+00d42d426c03f07155ec96d1957a21e57f510ef7	refs/heads/feature-profile
+b57b581b20f95f87351be773e925f76b96d388f5	refs/heads/main
+
+$ gh repo view 6-month-fde-challenge/task-01-branching-and-feature-development --json defaultBranchRef
+{"defaultBranchRef":{"name":"main"}}
+
+$ git branch -a
+  feature-dashboard
+  feature-login
+  feature-profile
+* main
+  remotes/origin/feature-dashboard
+  remotes/origin/feature-login
+  remotes/origin/feature-profile
+  remotes/origin/main
+
+```
+
+---
+## 8. Fresh-clone test
+
+The pushed repository was cloned into an empty directory and run from there, to
+prove the `api_key` blocker is really gone and that no file the code imports is
+gitignored:
+
+```console
+$ git clone https://github.com/6-month-fde-challenge/task-01-branching-and-feature-development.git fresh-clone
+Cloning into 'fresh-clone'...
+
+$ git branch -a
+* main
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/feature-dashboard
+  remotes/origin/feature-login
+  remotes/origin/feature-profile
+  remotes/origin/main
+
+$ git rev-parse --abbrev-ref HEAD
+main
+
+$ git log --graph --oneline --all --decorate
+* b57b581 (HEAD -> main, origin/main, origin/HEAD) Add README, git evidence transcript and submission links
+*   9e804f3 Merge feature-experimental into main
+|\  
+| * 42bfa3e Align dashboard value column with the border width
+|/  
+*   be453de Merge feature-dashboard into main
+|\  
+| * 8ee8729 (origin/feature-dashboard) Add render_dashboard with aligned summary rows and signed-in header
+|/  
+*   21e1eef Merge feature-profile into main
+|\  
+| * 00d42d4 (origin/feature-profile) Add get_display_name and authentication gate to profile
+|/  
+*   eb83da5 Merge feature-login into main
+|\  
+| * 1283846 (origin/feature-login) Add credential validation and is_authenticated helper to login
+|/  
+* 7237e61 Add calculator entry point and dashboard report
+* 76a610f Add arithmetic modules for addition, subtraction, multiplication and division
+* d4c57ca Add login prompt and profile resolution modules
+* e2c3e7d Add configuration module and numeric input handling
+* 4dc5c45 Add project scaffold with gitignore and environment template
+
+$ ls -A
+.env.example
+.git
+.gitignore
+GIT_EVIDENCE.md
+README.md
+addition_module.py
+calculator.py
+config.py
+dashboard.py
+division_module.py
+input_variables.py
+login.py
+multiply_module.py
+profile.py
+submission_links.txt
+subtract_module.py
+
+$ ls secrets.py
+ls: cannot access 'secrets.py': No such file or directory
+
+$ grep -rnE "^(from|import) secrets" *.py
+(exit status 1 - no matches, nothing imports a secrets module)
+
+$ git check-ignore -v config.py login.py profile.py calculator.py dashboard.py
+(exit status 1 - no tracked source file is gitignored)
+
+$ python dashboard.py < /dev/null
+Enter a number 1 :    -> no input available, using default: 10
+Enter a number 2 :    -> no input available, using default: 5
+Enter username :    -> no input available, using default: veerandra
+Enter password :    -> no input available, using default: demo-password
+API key present and logged in as veerandra
+API key present and logged in as veerandra
+API key present and logged in as veerandra
+API key present and logged in as veerandra
+*************************************************
+|                   DASHBOARD                   |
+|            Signed in as Veerandra             |
+*************************************************
+| Result of addition                         15 |
+| Result of subtraction                       5 |
+| Result of multiplication                   50 |
+| Result of division                        2.0 |
+*************************************************
+exit code: 0
 ```
 
 ---
